@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verizon - XXXXXX Unassigned</title>
+    <style>
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 48px;
+            padding: 0 16px;
+            font-size: 13px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        
+        .nav-links a:hover { color: white; }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-solution {
+            border: 1px solid #777;
+            border-radius: 12px;
+            padding: 4px 12px;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-bar {
+            background-color: #555;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            width: 200px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            margin-left: 5px;
+            width: 100%;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ccc;
+            font-size: 16px;
+        }
+        
+        .profile-icon {
+            background-color: #ccc;
+            color: #333;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Sub Navigation / Workspace Tabs */
+        .sub-nav {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            height: 40px;
+        }
+
+        .icon-menu {
+            width: 48px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f8f8;
+            border-right: 1px solid #ddd;
+        }
+
+        .icon-menu-item {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .icon-menu-item.active {
+            background-color: #c00;
+            color: white;
+        }
+
+        .tab-bar {
+            display: flex;
+            flex-grow: 1;
+            padding: 0 10px;
+            font-size: 13px;
+        }
+
+        .tab {
+            padding: 0 15px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            border-right: 1px solid #ddd;
+            background-color: #f4f4f4;
+            gap: 10px;
+        }
+        
+        .tab-active { background-color: white; }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 13px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .sidebar-tab.active {
+            color: #c00;
+            border-bottom: 2px solid #c00;
+        }
+
+        .sidebar-content {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding: 10px 0;
+        }
+
+        .accordion-item {
+            font-size: 13px;
+            color: #333;
+        }
+
+        .accordion-header {
+            padding: 6px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .accordion-body { padding-left: 30px; }
+
+        .accordion-link {
+            padding: 6px 15px;
+            display: block;
+            text-decoration: none;
+            color: #555;
+        }
+
+        .accordion-link:hover { background-color: #f0f0f0; }
+
+        .accordion-link.active {
+            position: relative;
+            background-color: #f9f9f9;
+        }
+
+        .accordion-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10%;
+            height: 80%;
+            width: 3px;
+            background-color: #c00;
+        }
+
+        /* Content Area */
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 30px;
+            overflow: auto;
+        }
+
+        /* Header Actions */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: normal;
+            color: #444;
+        }
+
+        .badge {
+            background-color: #ccc;
+            color: #333;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-icon {
+            border: 1px solid #c00;
+            background: white;
+            color: #c00;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .btn-icon .icon-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #0078d4;
+            color: white;
+            font-size: 9px;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            border: 1px solid #c00;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #c00;
+        }
+
+        .btn-primary {
+            background: #c00;
+            color: white;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 10px;
+            color: #333;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #444;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .link-red {
+            color: #c00;
+            text-decoration: none;
+        }
+
+        .link-red:hover {
+            text-decoration: underline;
+        }
+
+        /* Pagination Footer */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            font-size: 12px;
+            color: #555;
+            border-top: 1px solid #ddd;
+            margin-top: auto;
+        }
+
+        .page-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .page-number {
+            padding: 3px 8px;
+            cursor: pointer;
+        }
+
+        .page-number.active {
+            border: 1px solid #c00;
+            color: #c00;
+            font-weight: bold;
+        }
+        
+        .sort-icon { font-size: 10px; margin-left: 4px; color: #777; }
+    </style>
+</head>
+<body>
+
+    <header class="top-nav">
+        <div class="nav-left">
+            <div class="logo">verizon</div>
+            <div class="nav-links">
+                <a href="#">All</a>
+                <a href="#">Favorites</a>
+                <a href="#">History</a>
+                <a href="#">Workspaces</a>
+            </div>
+        </div>
+        <div class="nav-center">
+            <div class="custom-solution">
+                Custom Solution <span>☆</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search">
+                <span>▼</span>
+            </div>
+            <div class="nav-icons">
+                <span>🌐</span>
+                <span>💬<sup style="font-size:9px; background:#0078d4; padding:0 3px; border-radius:50%; margin-left:-5px;">1</sup></span>
+                <span>❔</span>
+                <span>🔔</span>
+                <div class="profile-icon">AK</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="sub-nav">
+        <div class="icon-menu">
+            <div class="icon-menu-item">🏠</div>
+            <div class="icon-menu-item active">≡</div>
+            <div class="icon-menu-item">📈</div>
+        </div>
+        <div class="tab-bar">
+            <div class="tab tab-active">
+                ≡ List
+            </div>
+            <div class="tab">
+                TBC <span>×</span>
+            </div>
+            <div class="tab" style="border:none; cursor:pointer;">
+                +
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-tabs">
+                <div class="sidebar-tab active">Lists</div>
+                <div class="sidebar-tab">My Lists</div>
+            </div>
+            <div class="sidebar-content">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>⌄</span> DA-COE
+                    </div>
+                    <div class="accordion-body">
+                        <a href="#" class="accordion-link">Open</a>
+                        <a href="#" class="accordion-link active">Unassigned</a>
+                        <a href="#" class="accordion-link">Closed</a>
+                        <a href="#" class="accordion-link">All</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">
+                        <span style="font-size: 16px;">≡</span> DA-COE - Unassigned <span class="badge">121</span>
+                    </h1>
+                    <div class="subtitle">Last refreshed just now.</div>
+                </div>
+                <div class="actions">
+                    <button class="btn-icon">↻</button>
+                    <button class="btn-icon">⚙</button>
+                    <button class="btn-icon">↑</button>
+                    <button class="btn-icon">
+                        ⚲
+                        <span class="icon-badge">2</span>
+                    </button>
+                    <button class="btn btn-outline">Edit</button>
+                    <button class="btn btn-outline">Export</button>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox"></th>
+                        <th>SFDC Opp ID #</th>
+                        <th>Number <span class="sort-icon">▲</span></th>
+                        <th>Customer Name</th>
+                        <th>State</th>
+                        <th>Assigned To <span class="sort-icon">⚲</span></th>
+                        <th>Request Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3628472</a></td>
+                        <td>Case # 0020499</td>
+                        <td>Acme Corp</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>Address Validation</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3621934</a></td>
+                        <td>Case # 0020500</td>
+                        <td>Globex Corporation</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>RFx/Proactive Bid</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3625512</a></td>
+                        <td>Case # 0020501</td>
+                        <td>Soylent Corp</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>New Contract Amendment</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3459021</a></td>
+                        <td>Case # 0020502</td>
+                        <td>Initech</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>Address Validation</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3451123</a></td>
+                        <td>Case # 0020505</td>
+                        <td>Umbrella Corporation</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>RFx/Proactive Bid</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3456789</a></td>
+                        <td>Case # 0020506</td>
+                        <td>Massive Dynamic</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>New Contract Amendment</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3623344</a></td>
+                        <td>Case # 0020509</td>
+                        <td>Stark Industries</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>New Contract Amendment</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3629812</a></td>
+                        <td>Case # 0020510</td>
+                        <td>Wayne Enterprises</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>Address Validation</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-1114567</a></td>
+                        <td>Case # 0020511</td>
+                        <td>Cyberdyne Systems</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>RFx/Proactive Bid</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3627465</a></td>
+                        <td>Case # 0020512</td>
+                        <td>Virtucon</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>Address Validation</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3622091</a></td>
+                        <td>Case # 0020513</td>
+                        <td>Omni Consumer Products</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>New Contract Amendment</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3624837</a></td>
+                        <td>Case # 0020514</td>
+                        <td>Buy n Large</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>RFx/Proactive Bid</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3626102</a></td>
+                        <td>Case # 0020515</td>
+                        <td>Hooli</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>RFx/Proactive Bid</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3458829</a></td>
+                        <td>Case # 0020516</td>
+                        <td>Vehement Capital Partners</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>Address Validation</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3453045</a></td>
+                        <td>Case # 0020517</td>
+                        <td>Pied Piper</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>New Contract Amendment</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><a href="#" class="link-red">O-3857182</a></td>
+                        <td>Case # 0020520</td>
+                        <td>Dunder Mifflin</td>
+                        <td>Open</td>
+                        <td>(empty)</td>
+                        <td>Address Validation</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <div>Showing 101-120 of 121</div>
+                <div class="page-controls">
+                    <span class="page-number">|&lt;</span>
+                    <span class="page-number">&lt;</span>
+                    <span class="page-number">1</span>
+                    <span class="page-number">2</span>
+                    <span class="page-number">3</span>
+                    <span class="page-number">4</span>
+                    <span class="page-number">5</span>
+                    <span class="page-number active">6</span>
+                    <span class="page-number">7</span>
+                    <span class="page-number">&gt;</span>
+                    <span class="page-number">&gt;|</span>
+                </div>
+                <div>
+                    <span style="color: #c00; font-weight: bold;">20 ▼</span> rows per page
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
