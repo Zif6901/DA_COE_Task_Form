@@ -1,690 +1,2104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verizon - XXXXXX Unassigned</title>
-    <style>
-        /* Base Reset */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Updated Form Replication - Activity Log & Chat</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+        font-size: 13px;
+    }
+    .form-container {
+        background-color: #fafafa;
+        border: 1px solid #e0e0e0;
+        max-width: 1000px;
+        margin: 0 auto;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        padding-bottom: 20px;
+    }
+    
+    /* Header Styles */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid #ddd;
+        background-color: #f8f8f8;
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .menu-icon {
+        color: #a30000;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .title-block {
+        display: flex;
+        flex-direction: column;
+    }
+    .title-main {
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .title-sub {
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .title-sub span {
+        font-weight: normal;
+        color: #555;
+    }
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .header-icons span {
+        color: #a30000;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    
+    /* Buttons */
+    .btn, .btn-alice, .btn-message, .btn-engage {
+        min-width: 110px;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 6px 16px;
+        border-radius: 3px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    .btn {
+        background-color: #fff;
+        border: 1px solid #a30000;
+        color: #a30000;
+    }
+    .btn:hover {
+        background-color: #fdf5f5;
+    }
 
-        body {
-            background-color: #f4f4f4;
-            color: #333;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+    /* ALICE Button */
+    .btn-alice {
+        background-color: #a30000;
+        border: 1px solid #a30000;
+        color: #ffffff;
+    }
+    .btn-alice:hover {
+        background-color: #8a0000;
+    }
 
-        /* Top Navigation Bar */
-        .top-nav {
-            background-color: #333;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 48px;
-            padding: 0 16px;
-            font-size: 13px;
-        }
+    /* Message & Engage Buttons */
+    .btn-message, .btn-engage {
+        background-color: #ffffff;
+        border: 1px solid #a30000;
+        color: #a30000;
+    }
+    .btn-message:hover, .btn-engage:hover {
+        background-color: #fdf5f5;
+    }
 
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+    /* Dropdown Menu Styles */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #ffffff;
+        min-width: 360px;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.15);
+        z-index: 2500;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        overflow-y: auto;
+        max-height: 500px;
+    }
+    .header .dropdown-content {
+        top: 100%;
+        margin-top: 5px;
+    }
+    .footer .dropdown-content {
+        bottom: 100%;
+        margin-bottom: 5px;
+    }
+    .dropdown-item {
+        padding: 10px 16px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+        color: #333;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+    }
+    .dropdown-item:hover {
+        background-color: #f1f1f1;
+        color: #a30000;
+    }
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
 
-        .logo {
-            color: #ff0000;
-            font-weight: bold;
-            font-size: 16px;
-            margin-right: 10px;
-        }
+    /* Nested Sub-options for Engage Menu */
+    .sub-options {
+        background-color: #fafafa;
+        border-bottom: 1px solid #eee;
+    }
+    .dropdown-sub-item {
+        padding: 8px 16px 8px 40px;
+        cursor: pointer;
+        color: #555;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+    }
+    .dropdown-sub-item:hover {
+        background-color: #f1f1f1;
+        color: #a30000;
+    }
+    
+    /* Disabled item styling */
+    .disabled-item {
+        color: #a0a0a0;
+        cursor: not-allowed;
+        background-color: #f9f9f9;
+    }
+    .disabled-item:hover {
+        background-color: #f9f9f9;
+        color: #a0a0a0;
+    }
 
-        .nav-links a {
-            color: #ccc;
-            text-decoration: none;
-            margin-right: 15px;
+    /* Form Body Styles */
+    .form-body {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    /* Collapsible Sections */
+    .collapsible-section {
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        margin-bottom: 15px;
+    }
+    .collapsible-header {
+        background-color: #fcfcfc;
+        color: #a30000;
+        cursor: pointer;
+        padding: 12px 20px;
+        width: 100%;
+        text-align: left;
+        border: none;
+        border-bottom: 1px solid #eee;
+        outline: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 4px 4px 0 0;
+    }
+    .collapsible-header:hover {
+        background-color: #f5f5f5;
+    }
+    .collapsible-header.collapsed {
+        border-bottom: none;
+        border-radius: 4px;
+    }
+    .toggle-icon {
+        font-size: 10px;
+        transition: transform 0.2s ease;
+    }
+    .collapsible-header.collapsed .toggle-icon {
+        transform: rotate(-90deg);
+    }
+    .collapsible-content {
+        padding: 20px;
+        display: block;
+    }
+
+    /* Column Layouts within Sections */
+    .form-columns {
+        display: flex;
+        gap: 40px;
+    }
+    .column {
+        flex: 1;
+        width: 50%;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    /* Form Rows */
+    .form-group {
+        display: flex;
+        align-items: flex-start;
+    }
+    .form-group label {
+        width: 35%;
+        text-align: right;
+        padding-right: 15px;
+        padding-top: 6px;
+        color: #444;
+        line-height: 1.2;
+    }
+    
+    /* Multi-field row */
+    .multi-field {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .inline-label {
+        color: #444;
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    /* Full Width Row Styling inside collapsibles */
+    .form-group-full {
+        display: flex;
+        align-items: flex-start;
+    }
+    .form-group-full label {
+        width: calc(17.5% - 7px);
+        text-align: right;
+        padding-right: 15px;
+        padding-top: 6px;
+        color: #444;
+        line-height: 1.2;
+    }
+    .form-group-full .input-wrapper {
+        width: calc(82.5% + 7px);
+        position: relative;
+        display: flex;
+    }
+
+    .input-wrapper {
+        width: 65%;
+        position: relative;
+        display: flex;
+    }
+    
+    /* Inputs */
+    input[type="text"], input[type="file"], select, textarea, .rich-text-box {
+        width: 100%;
+        padding: 6px 8px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 13px;
+        color: #333;
+    }
+    textarea {
+        resize: vertical; 
+        height: 60px;
+    }
+    .textarea-large {
+        height: 100px;
+    }
+    .textarea-xlarge {
+        height: 150px;
+    }
+    select {
+        cursor: pointer;
+    }
+
+    /* Rich Text Box for Hyperlinks */
+    .rich-text-box {
+        background-color: #fff;
+        overflow-y: auto;
+        line-height: 1.5;
+    }
+    .rich-text-box a {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+    .rich-text-box a:hover {
+        color: #a30000;
+    }
+    
+    /* Input variants */
+    .input-with-icon {
+        display: flex;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        overflow: hidden;
+        background: #fff;
+        width: 100%;
+    }
+    .input-with-icon input {
+        border: none;
+        border-radius: 0;
+        flex-grow: 1;
+        outline: none;
+    }
+    .icon-btn {
+        background: transparent;
+        border: none;
+        border-left: 1px solid #ccc;
+        padding: 0 8px;
+        color: #a30000;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+    .required-input {
+        background-color: #fbecec !important;
+        border-color: #d89a9a !important;
+    }
+    .readonly-input {
+        background-color: #eee !important;
+        color: #777 !important;
+        cursor: not-allowed;
+    }
+    
+    /* Specific composite fields */
+    .info-btn {
+        margin-left: 8px;
+        background: #fff;
+        border: 1px solid #a30000;
+        color: #a30000;
+        border-radius: 3px;
+        padding: 0 8px;
+        cursor: pointer;
+        font-family: serif;
+        font-style: italic;
+        font-weight: bold;
+    }
+    
+    /* Footer */
+    .footer {
+        padding: 0 20px 20px 20px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: none;
+        z-index: 3000;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-content {
+        background-color: #fff;
+        width: 900px;
+        border-radius: 5px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-height: 90vh;
+    }
+    .modal-header {
+        background-color: #a30000;
+        color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        font-size: 15px;
+    }
+    .modal-close {
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .modal-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        overflow-y: auto; 
+    }
+    .modal-instructions {
+        font-size: 13px;
+        color: #555;
+        margin-bottom: 10px;
+        font-style: italic;
+    }
+    .modal-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #ddd;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    /* Tabs CSS */
+    .tab-container {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 5px;
+        gap: 5px;
+    }
+    .tab-button {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-bottom: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+        color: #555;
+        border-radius: 4px 4px 0 0;
+        transition: background 0.2s;
+    }
+    .tab-button:hover {
+        background: #eee;
+    }
+    .tab-button.active {
+        background: #fff;
+        color: #a30000;
+        border-top: 2px solid #a30000;
+        position: relative;
+        bottom: -1px;
+    }
+    .tab-content {
+        display: none;
+        padding-top: 10px;
+    }
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Floating Chat Window */
+    .chat-window {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 380px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1000;
+    }
+    .chat-header {
+        background-color: #a30000;
+        color: #fff;
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+    }
+    .chat-header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .chat-options {
+        display: flex;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+    .chat-options label {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        cursor: pointer;
+    }
+    .chat-options input[type="checkbox"] {
+        margin: 0;
+        cursor: pointer;
+    }
+    .close-chat {
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 10px;
+    }
+    .chat-body {
+        height: 250px;
+        padding: 15px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .chat-message-system {
+        color: #666;
+        font-style: italic;
+        font-size: 11px;
+        text-align: center;
+        margin: 0;
+    }
+    .chat-footer {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        background-color: #fff;
+    }
+    .chat-footer input {
+        flex-grow: 1;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 3px 0 0 3px;
+        outline: none;
+        font-size: 12px;
+    }
+    .chat-footer button {
+        background-color: #a30000;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 0 3px 3px 0;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* ALICE Image Widget Popup */
+    .alice-popup-container {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 2000;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        border-radius: 8px;
+        background: #fff;
+        width: 380px;
+        overflow: hidden;
+    }
+    .alice-popup-container img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+    .alice-close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 28px;
+        height: 28px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+    }
+    .alice-close-btn:hover {
+        background: #eee;
+    }
+</style>
+<script>
+    function toggleSection(button) {
+        button.classList.toggle("collapsed");
+        var content = button.nextElementSibling;
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+        } else {
+            content.style.display = "none";
+        }
+    }
+    
+    function openRequestInfoModal() {
+        document.getElementById('requestInfoModal').style.display = 'flex';
+    }
+    
+    function closeRequestInfoModal() {
+        document.getElementById('requestInfoModal').style.display = 'none';
+    }
+
+    // Modal Tabs logic
+    function openModalTab(evt, tabId) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(tabId).style.display = "block";
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    // Dynamic show/hide for Address Validation file upload (RFx Tab)
+    function toggleAddressAttachment() {
+        var checkbox = document.getElementById('address_val_checkbox');
+        var attachmentGroup = document.getElementById('address_attachment_group');
+        if (checkbox && attachmentGroup) {
+            attachmentGroup.style.display = checkbox.checked ? 'flex' : 'none';
+        }
+    }
+
+    function toggleAddressAttachmentAmend() {
+        var checkbox = document.getElementById('address_val_checkbox_amend');
+        var attachmentGroup = document.getElementById('address_attachment_group_amend');
+        if (checkbox && attachmentGroup) {
+            attachmentGroup.style.display = checkbox.checked ? 'flex' : 'none';
+        }
+    }
+
+    // Toggle conditional fields for "Orders Required" in Amendment Tab
+    function toggleOrdersFields() {
+        var checkbox = document.getElementById('orders_required_checkbox');
+        var fieldsGroup = document.getElementById('amendment_orders_fields');
+        if (checkbox && fieldsGroup) {
+            fieldsGroup.style.display = checkbox.checked ? 'flex' : 'none';
+        }
+    }
+
+    // Toggle Functions for ALICE, Chat, and Engage Menu
+    function toggleAlicePopup() {
+        var popup = document.getElementById('alicePopup');
+        if (popup.style.display === 'block') {
+            popup.style.display = 'none';
+        } else {
+            popup.style.display = 'block';
+            document.getElementById('chatWindow').style.display = 'none'; // Close chat if open
+        }
+    }
+
+    function toggleChat() {
+        var chat = document.getElementById('chatWindow');
+        if (chat.style.display === 'flex') {
+            chat.style.display = 'none';
+        } else {
+            chat.style.display = 'flex';
+            document.getElementById('alicePopup').style.display = 'none'; // Close ALICE if open
+        }
+    }
+
+    function toggleEngageMenu(menuId, event) {
+        event.stopPropagation();
+        var menu = document.getElementById(menuId);
+        var isDisplayed = menu.style.display === 'block';
+        
+        // Close all dropdowns first
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            dropdowns[i].style.display = "none";
         }
         
-        .nav-links a:hover { color: white; }
-
-        .nav-center {
-            display: flex;
-            align-items: center;
+        // Toggle target menu
+        if (!isDisplayed) {
+            menu.style.display = 'block';
         }
+    }
 
-        .custom-solution {
-            border: 1px solid #777;
-            border-radius: 12px;
-            padding: 4px 12px;
-            color: white;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+    function toggleSubMenu(checkbox) {
+        var subOptions = checkbox.parentElement.nextElementSibling;
+        if (subOptions && subOptions.classList.contains('sub-options')) {
+            subOptions.style.display = checkbox.checked ? 'block' : 'none';
         }
+    }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+    // Close dropdowns if clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.btn-engage') && !event.target.closest('.dropdown-content')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                dropdowns[i].style.display = "none";
+            }
         }
+    }
 
-        .search-bar {
-            background-color: #555;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 8px;
-            color: white;
-            display: flex;
-            align-items: center;
-            width: 200px;
-        }
+    // Add Quoter Logic
+    function addQuoter() {
+        var container = document.getElementById('quoter-container');
+        var wrapper = document.createElement('div');
+        wrapper.className = 'input-with-icon';
+        wrapper.innerHTML = '<input type="text" value=""><button class="icon-btn">&#128269;</button>';
+        container.appendChild(wrapper);
+    }
 
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
-            margin-left: 5px;
-            width: 100%;
-        }
+    // Add Validator Logic
+    function addValidator() {
+        var container = document.getElementById('validator-container');
+        var wrapper = document.createElement('div');
+        wrapper.className = 'input-with-icon';
+        wrapper.innerHTML = '<input type="text" value=""><button class="icon-btn">&#128269;</button>';
+        container.appendChild(wrapper);
+    }
 
-        .nav-icons {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #ccc;
-            font-size: 16px;
+    // Toggle Hold Reason Field based on Status (Main Form)
+    function toggleHoldReason() {
+        var statusSelect = document.getElementById('main_status_dropdown');
+        var holdReasonGroup = document.getElementById('hold_reason_group');
+        if (statusSelect && holdReasonGroup) {
+            if (statusSelect.value === 'On Hold') {
+                holdReasonGroup.style.display = 'flex';
+            } else {
+                holdReasonGroup.style.display = 'none';
+            }
         }
-        
-        .profile-icon {
-            background-color: #ccc;
-            color: #333;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-        }
+    }
 
-        /* Sub Navigation / Workspace Tabs */
-        .sub-nav {
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            height: 40px;
+    // Toggle Hold Reason Field based on Status (Address Validation Tab)
+    function toggleAddressHoldReason() {
+        var statusSelect = document.getElementById('address_status_dropdown');
+        var holdReasonGroup = document.getElementById('address_hold_reason_group');
+        if (statusSelect && holdReasonGroup) {
+            if (statusSelect.value === 'On Hold') {
+                holdReasonGroup.style.display = 'flex';
+            } else {
+                holdReasonGroup.style.display = 'none';
+            }
         }
-
-        .icon-menu {
-            width: 48px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f8f8f8;
-            border-right: 1px solid #ddd;
-        }
-
-        .icon-menu-item {
-            width: 100%;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .icon-menu-item.active {
-            background-color: #c00;
-            color: white;
-        }
-
-        .tab-bar {
-            display: flex;
-            flex-grow: 1;
-            padding: 0 10px;
-            font-size: 13px;
-        }
-
-        .tab {
-            padding: 0 15px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            border-right: 1px solid #ddd;
-            background-color: #f4f4f4;
-            gap: 10px;
-        }
-        
-        .tab-active { background-color: white; }
-
-        /* Main Layout */
-        .main-container {
-            display: flex;
-            flex-grow: 1;
-            overflow: hidden;
-            background-color: white;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            border-right: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-            background-color: #fff;
-        }
-
-        .sidebar-tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .sidebar-tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px 0;
-            font-size: 13px;
-            cursor: pointer;
-            color: #555;
-        }
-
-        .sidebar-tab.active {
-            color: #c00;
-            border-bottom: 2px solid #c00;
-        }
-
-        .sidebar-content {
-            overflow-y: auto;
-            flex-grow: 1;
-            padding: 10px 0;
-        }
-
-        .accordion-item {
-            font-size: 13px;
-            color: #333;
-        }
-
-        .accordion-header {
-            padding: 6px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .accordion-body { padding-left: 30px; }
-
-        .accordion-link {
-            padding: 6px 15px;
-            display: block;
-            text-decoration: none;
-            color: #555;
-        }
-
-        .accordion-link:hover { background-color: #f0f0f0; }
-
-        .accordion-link.active {
-            position: relative;
-            background-color: #f9f9f9;
-        }
-
-        .accordion-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10%;
-            height: 80%;
-            width: 3px;
-            background-color: #c00;
-        }
-
-        /* Content Area */
-        .content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 30px;
-            overflow: auto;
-        }
-
-        /* Header Actions */
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .page-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: normal;
-            color: #444;
-        }
-
-        .badge {
-            background-color: #ccc;
-            color: #333;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 12px;
-        }
-
-        .subtitle {
-            font-size: 11px;
-            color: #777;
-            margin-top: 5px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .btn-icon {
-            border: 1px solid #c00;
-            background: white;
-            color: #c00;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .btn-icon .icon-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #0078d4;
-            color: white;
-            font-size: 9px;
-            border-radius: 50%;
-            width: 14px;
-            height: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn {
-            border: 1px solid #c00;
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-outline {
-            background: white;
-            color: #c00;
-        }
-
-        .btn-primary {
-            background: #c00;
-            color: white;
-        }
-
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        th {
-            text-align: left;
-            padding: 12px 10px;
-            color: #333;
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
-        }
-
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #f0f0f0;
-            color: #444;
-        }
-
-        tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        .link-red {
-            color: #c00;
-            text-decoration: none;
-        }
-
-        .link-red:hover {
-            text-decoration: underline;
-        }
-
-        /* Pagination Footer */
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            font-size: 12px;
-            color: #555;
-            border-top: 1px solid #ddd;
-            margin-top: auto;
-        }
-
-        .page-controls {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .page-number {
-            padding: 3px 8px;
-            cursor: pointer;
-        }
-
-        .page-number.active {
-            border: 1px solid #c00;
-            color: #c00;
-            font-weight: bold;
-        }
-        
-        .sort-icon { font-size: 10px; margin-left: 4px; color: #777; }
-    </style>
+    }
+</script>
 </head>
 <body>
 
-    <header class="top-nav">
-        <div class="nav-left">
-            <div class="logo">verizon</div>
-            <div class="nav-links">
-                <a href="#">All</a>
-                <a href="#">Favorites</a>
-                <a href="#">History</a>
-                <a href="#">Workspaces</a>
+<div class="form-container">
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon">&#9776;</div>
+            <div class="title-block">
+                <div class="title-main">1@TTI DA-COE Engagement</div>
+                <div class="title-sub"><strong>Case# 12345</strong></div>
             </div>
         </div>
-        <div class="nav-center">
-            <div class="custom-solution">
-                Custom Solution <span>☆</span>
+        <div class="header-right">
+            <div class="header-icons">
+                <span>&#128206;</span> 
+                <span>&#9881;</span>  
+                <span>&bull;&bull;&bull;</span> 
             </div>
-        </div>
-        <div class="nav-right">
-            <div class="search-bar">
-                <span>🔍</span>
-                <input type="text" placeholder="Search">
-                <span>▼</span>
-            </div>
-            <div class="nav-icons">
-                <span>🌐</span>
-                <span>💬<sup style="font-size:9px; background:#0078d4; padding:0 3px; border-radius:50%; margin-left:-5px;">1</sup></span>
-                <span>❔</span>
-                <span>🔔</span>
-                <div class="profile-icon">AK</div>
-            </div>
-        </div>
-    </header>
+            <button class="btn-alice" onclick="toggleAlicePopup()">ALICE</button>
+            <button class="btn-message" onclick="toggleChat()">Message</button>
 
-    <div class="sub-nav">
-        <div class="icon-menu">
-            <div class="icon-menu-item">🏠</div>
-            <div class="icon-menu-item active">≡</div>
-            <div class="icon-menu-item">📈</div>
-        </div>
-        <div class="tab-bar">
-            <div class="tab tab-active">
-                ≡ List
+            <div class="dropdown">
+                <button class="btn-engage" onclick="toggleEngageMenu('engageMenuHeader', event)">Engage</button>
+                <div id="engageMenuHeader" class="dropdown-content">
+                    <label class="dropdown-item"><input type="checkbox"> Deal Lifecycle Management (DLM)</label>
+                    <label class="dropdown-item"><input type="checkbox" onchange="toggleSubMenu(this)"> Deal Assurance: Center of Excellence (COE)</label>
+                    <div class="sub-options" style="display: none;">
+                        <label class="dropdown-sub-item"><input type="checkbox"> Address Validation</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> New Contract/Amendment (Non RFx)</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> RFx/Proactive Bid</label>
+                    </div>
+
+                    <label class="dropdown-item"><input type="checkbox"> Deal Assurance: Converged Svc. Support</label>
+                    <label class="dropdown-item"><input type="checkbox" onchange="toggleSubMenu(this)"> Deal Assurance: CPE Services</label>
+                    <div class="sub-options" style="display: none;">
+                      <label class="dropdown-sub-item"><input type="checkbox"> CPE Assessments</label>
+  
+                        <label class="dropdown-sub-item"><input type="checkbox"> CPE Availability Validation</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> CLE/VLE Setup</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> Setting up Non-Std Supplier</label>
+               
+                        <label class="dropdown-sub-item"><input type="checkbox"> Custom Discounts</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> Custom Rates/Costs</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> Quoting Support</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> Quoting Training/ Troubleshooting Support</label>
+ 
+                        <label class="dropdown-sub-item"><input type="checkbox"> CPE Template Building</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> CPE Counseling/ Guidance /Strategy</label>
+                        <label class="dropdown-sub-item"><input type="checkbox"> Non-Standard MRP</label>
+                    </div>
+
+                    <label class="dropdown-item"><input type="checkbox"> Deal Assurance: Deal Readiness Assessment (DRA)</label>
+                    <label class="dropdown-item"><input type="checkbox"> Deal Assurance: Implementation Assurance (IA)</label>
+                    <label class="dropdown-item"><input type="checkbox"> Tech Ops: Global Integrated Architect (GIA)</label>
+                    <label class="dropdown-item"><input type="checkbox"> Tech Ops &amp; Architecture: OPD / SDA</label>
+                    <label class="dropdown-item"><input type="checkbox"> Tech Ops: Integrated Contract Management (ICM)</label>
+                </div>
             </div>
-            <div class="tab">
-                TBC <span>×</span>
-            </div>
-            <div class="tab" style="border:none; cursor:pointer;">
-                +
-            </div>
+
+            <button class="btn" onclick="openRequestInfoModal()">Request Info</button>
+            <button class="btn">Submit</button>
+            <button class="btn">Save</button>
         </div>
     </div>
 
-    <div class="main-container">
-        <aside class="sidebar">
-            <div class="sidebar-tabs">
-                <div class="sidebar-tab active">Lists</div>
-                <div class="sidebar-tab">My Lists</div>
-            </div>
-            <div class="sidebar-content">
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <span>⌄</span> DA-COE
+    <div class="form-body">
+        
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                Opportunity & Customer Details <span class="toggle-icon">&#9660;</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="form-columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label>Opportunity ID</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="main_opp_id" value="O-3928292" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>NASP</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="19HNYR" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Contract ID</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Segment</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="US" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Branch</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="PRIN MOUNTAIN" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Name</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="main_cust_name" value="SPRINKLE DOODLES" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Master Customer<br>Contracting Country</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="US" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Proposed Solution<br><span style="font-size: 10px; font-weight: normal; color: #777;">(Select One or More Options)</span></label>
+                            <div class="input-wrapper">
+                                <select multiple style="height: auto; min-height: 100px;">
+                                    <option value="Network only">Network only</option>
+                                    <option value="Managed">Managed</option>
+                                    <option value="Wave">Wave</option>
+                                    <option value="Eline">Eline</option>
+                                    <option value="CPE Only">CPE Only</option>
+                                    <option value="CPE with Maintenance">CPE with Maintenance</option>
+                                    <option value="VOIP">VOIP</option>
+                                    <option value="IPCC">IPCC</option>
+                                    <option value="Webex">Webex</option>
+                                    <option value="Legacy">Legacy</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>TCV</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="$10,000" class="readonly-input" readonly>
+                            </div>
+                        </div>
                     </div>
-                    <div class="accordion-body">
-                        <a href="#" class="accordion-link">Open</a>
-                        <a href="#" class="accordion-link active">Unassigned</a>
-                        <a href="#" class="accordion-link">Closed</a>
-                        <a href="#" class="accordion-link">All</a>
+                    <div class="column">
+                        <div class="form-group">
+                            <label>Account Manager</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="main_acc_mgr" value="Smith, John" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Solutions Architect (SA)</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="main_sa" value="Jones, Mary" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Requested By</label>
+                            <div class="input-wrapper" style="display: flex;">
+                                <input type="text" id="main_req_by" value="Arnold, Stephen K" class="readonly-input" readonly style="flex-grow: 1;">
+                                <button class="info-btn">i</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Opportunity Type</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="opp_type" value="New Business" checked> New Business</label>
+                                <label style="width: auto; padding: 6px 0 0 0; text-align: left;"><input type="checkbox" name="opp_type" value="Renewal"> Renewal</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Type</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="cust_type" value="Existing" checked> Existing</label>
+                                <label style="width: auto; padding: 6px 0 0 0; text-align: left;"><input type="checkbox" name="cust_type" value="New"> New</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>DLM Status</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="Nominated" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Deal Stage</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="1 Qualify" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>GVP</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="Pope" class="readonly-input" readonly>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </aside>
+        </div>
 
-        <main class="content">
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">
-                        <span style="font-size: 16px;">≡</span> DA-COE - Unassigned <span class="badge">121</span>
-                    </h1>
-                    <div class="subtitle">Last refreshed just now.</div>
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                Request Information <span class="toggle-icon">&#9660;</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="form-columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label>RFP/RFI</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="rfp_rfi" value="Yes" checked> Yes</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>RFP Round</label>
+                            <div class="input-wrapper">
+                                <select>
+                                    <option value="" disabled selected>Select Round</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="BAFO">BAFO</option>
+                                    <option value="LAFO">LAFO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Request Details</label>
+                            <div class="input-wrapper">
+                                <textarea class="textarea-large readonly-input" readonly>Bosch opportunity needs some analysis based on tax feedback
+Bosch is looking for Cisco managed routers (MWAN) on MPLS network with Central Germany MRP
+
+Attached is the fille “Bosch - Criteria for assessment” word document</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Intake Analysis</label>
+                            <div class="input-wrapper">
+                                <textarea class="textarea-large readonly-input" readonly>The request mentions "analysis based on tax feedback" and "Central Germany MRP" which indicates a need for research into CPE/Services availability and contracting types across multiple countries, aligning with the "Assessment" category.
+It also mentions "Cisco managed routers (MWAN) on MPLS network" which suggests a custom configuration is needed.</textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Any Alternative Solution proposed</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Any custom elements or special design requirements</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Rework</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="rework_check" value="Yes"> Yes</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Rework Reasons<br><span style="font-size: 10px; font-weight: normal; color: #777;">(Select One or More Options)</span></label>
+                            <div class="input-wrapper">
+                                <select multiple style="height: auto; min-height: 90px;">
+                                    <option value="Addition of Sites">Addition of Sites</option>
+                                    <option value="Deletion of Sites">Deletion of Sites</option>
+                                    <option value="Technology Change">Technology Change</option>
+                                    <option value="Solution Change">Solution Change</option>
+                                    <option value="CPE Change">CPE Change</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                    </div>
+            
+                    <div class="column">
+                        <div class="form-group">
+                            <label>Request Type</label>
+                            <div class="input-wrapper">
+                                <select>
+                                    <option>Address Validation</option>
+                                    <option>New Contract/Amendment (Non RFx)</option>
+                                    <option>RFx/Proactive Bid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Countries</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Site</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ProQuest Quote IDs</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="215384443-0, 0216998745-1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Attachment Information</label>
+                            <div class="input-wrapper">
+                                <div class="rich-text-box textarea-xlarge">
+                                    <strong>File Name:</strong> AYS Ticket Assignment Process<br>
+                                    <strong>URL:</strong> <a href="https://docs.google.com/document/d/1s9Nu58axgTANesdyqcUmlnE_ZLvo7zH9HwmwE8JoeB0/edit?usp=drive_link" target="_blank">https://docs.google.com/document/d/1s9Nu58axgTANesdyqcUmlnE_ZLvo7zH9HwmwE8JoeB0/edit?usp=drive_link</a><br>
+                                    <strong>Summary:</strong> This document outlines the step-by-step workflow for managing AYS tickets, including notification, information gathering, routing determination, and assignment execution.<br><br>
+
+                                    <strong>File Name:</strong> AYS Ticket Assignment Screenshot<br>
+                                    <strong>URL:</strong> <a href="https://docs.google.com/document/d/1uqjby7oAaDJ4-19FmLZ7Ygob9g5_k6_KdMDYDUell3E/edit?usp=drive_link" target="_blank">https://docs.google.com/document/d/1uqjby7oAaDJ4-19FmLZ7Ygob9g5_k6_KdMDYDUell3E/edit?usp=drive_link</a><br>
+                                    <strong>Summary:</strong> This screenshot displays an active AYS system incident ticket (INC016284342) where a user is requesting Tier 2 support to activate a specific CPE template so they can complete a quote.<br><br>
+
+                                    <strong>File Name:</strong> CPE INTAKE Requirements (Short Version)<br>
+                                    <strong>URL:</strong> <a href="https://docs.google.com/document/d/1CjCEPAKW1GfkSrtOjkHf-8WnX09Yq8kRQyrBeaxw-_E/edit?usp=drive_link" target="_blank">https://docs.google.com/document/d/1CjCEPAKW1GfkSrtOjkHf-8WnX09Yq8kRQyrBeaxw-_E/edit?usp=drive_link</a><br>
+                                    <strong>Summary:</strong> This document details the mission, supported partnerships, and service offerings of the CPE Support Team, while outlining a goal to transition from a fragmented intake process to a streamlined, single-channel model.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>VISE ID</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>AYS Ticket</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Iteration/Scenario<br><span style="font-size: 10px; font-weight: normal; color: #777;">(Select One or More Options)</span></label>
+                            <div class="input-wrapper">
+                                <select multiple style="height: auto; min-height: 110px;">
+                                    <option value="Product">Product</option>
+                                    <option value="Bandwidth">Bandwidth</option>
+                                    <option value="CPE contacting">CPE contacting</option>
+                                    <option value="CPE Maintenance">CPE Maintenance</option>
+                                    <option value="Term">Term</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="actions">
-                    <button class="btn-icon">↻</button>
-                    <button class="btn-icon">⚙</button>
-                    <button class="btn-icon">↑</button>
-                    <button class="btn-icon">
-                        ⚲
-                        <span class="icon-badge">2</span>
+            </div>
+        </div>
+
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                Engagement Timeline & Status <span class="toggle-icon">&#9660;</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="form-columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label>Date Engaged</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="2026-02-06" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label>Status</label>
+                            <div class="input-wrapper">
+                                <select id="main_status_dropdown" onchange="toggleHoldReason()">
+                                    <option value="New">New</option>
+                                    <option value="Under Review">Under Review</option>
+                                    <option value="Pending Assignment">Pending Assignment</option>
+                                    <option value="On Hold">On Hold</option>
+                                    <option value="Working">Working</option>
+                                    <option value="Closed - Complete">Closed - Complete</option>
+                                    <option value="Closed - Incomplete">Closed - Incomplete</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="hold_reason_group" style="display: none;">
+                            <label>Hold Reason</label>
+                            <div class="input-wrapper">
+                                <select>
+                                    <option value="" disabled selected>Select Reason</option>
+                                    <option value="With GL">With GL</option>
+                                    <option value="PCM">PCM</option>
+                                    <option value="IT">IT</option>
+                                    <option value="AT">AT</option>
+                                    <option value="Legal">Legal</option>
+                                    <option value="CD Approval">CD Approval</option>
+                                    <option value="SA for design">SA for design</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Requested Due Date</label>
+                            <div class="input-wrapper multi-field">
+                                <input type="text" value="2026-03-13" class="readonly-input" readonly style="width: 50%;">
+                                <span class="inline-label">Days Remaining</span>
+                                <input type="text" value="19" class="readonly-input" readonly style="width: 20%; text-align: center;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Days on Hold</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="12" class="readonly-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Date Completed</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Close Notes</label>
+                            <div class="input-wrapper">
+                                <textarea></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label>Quoter</label>
+                            <div class="input-wrapper" style="flex-direction: column; gap: 8px;">
+                                <div id="quoter-container" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                                    <div class="input-with-icon required-input">
+                                        <input type="text" class="required-input">
+                                        <button class="icon-btn">&#128269;</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn" style="align-self: flex-start; min-width: 0; padding: 4px 8px; font-size: 11px;" onclick="addQuoter()">+ Add Quoter</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Deal Strategist</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" value="Miller, Sam">
+                                    <button class="icon-btn">&#128269;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Bid Manager</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>PCM Needed</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="pcm_needed" value="Yes"> Yes</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>PCM POC</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="Zunaid Sheikh">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>GIS Engaged</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="gis_engaged" value="Yes"> Yes</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                Milestones <span class="toggle-icon">&#9660;</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="form-columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label>RFP Release Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Kick Off Call Scheduled Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>PCM Due Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Quotes submitted to PCM Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label>RFP Submission Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Due Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon required-input">
+                                    <input type="text" value="2026-02-27" class="required-input">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Extended Bid Response Due Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                Tasks <span class="toggle-icon">&#9660;</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="form-columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label>Contracting Required</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="task_contracting_req" value="Yes"> Yes</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label>CFS</label>
+                            <div class="input-wrapper multi-field">
+                                <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="task_cfs" value="Yes"> Yes</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                Address Validation Request Metrics <span class="toggle-icon">&#9660;</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="form-columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label>Request Received Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Acknowledged Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Request Completion Date</label>
+                            <div class="input-wrapper">
+                                <div class="input-with-icon">
+                                    <input type="text" placeholder="YYYY-MM-DD">
+                                    <button class="icon-btn">&#128197;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <div class="input-wrapper">
+                                <select id="address_status_dropdown" onchange="toggleAddressHoldReason()">
+                                    <option value="" disabled selected>Select Status</option>
+                                    <option value="New">New</option>
+                                    <option value="Under Review">Under Review</option>
+                                    <option value="Pending Assignment">Pending Assignment</option>
+                                    <option value="On Hold">On Hold</option>
+                                    <option value="Working">Working</option>
+                                    <option value="Closed - Complete">Closed - Complete</option>
+                                    <option value="Closed - Incomplete">Closed - Incomplete</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="address_hold_reason_group" style="display: none;">
+                            <label>Hold Reason</label>
+                            <div class="input-wrapper">
+                                <select>
+                                    <option value="" disabled selected>Select Reason</option>
+                                    <option value="With GL">With GL</option>
+                                    <option value="PCM">PCM</option>
+                                    <option value="IT">IT</option>
+                                    <option value="AT">AT</option>
+                                    <option value="Legal">Legal</option>
+                                    <option value="CD Approval">CD Approval</option>
+                                    <option value="SA for design">SA for design</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Case Business Days (Days Since Received)</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Validated By</label>
+                            <div class="input-wrapper" style="flex-direction: column; gap: 8px;">
+                                <div id="validator-container" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                                    <div class="input-with-icon">
+                                        <input type="text" value="">
+                                        <button class="icon-btn">&#128269;</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn" style="align-self: flex-start; min-width: 0; padding: 4px 8px; font-size: 11px;" onclick="addValidator()">+ Add Validator</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label>RFP Case ID</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address Auto Validated</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Manual Validated</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>VISE/Sheet parser ID</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Invalid Address</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Major Fallout countries</label>
+                            <div class="input-wrapper">
+                                <input type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>CoE Region</label>
+                            <div class="input-wrapper">
+                                <select>
+                                    <option value="" disabled selected>Select Region</option>
+                                    <option value="International">International</option>
+                                    <option value="Americas">Americas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Closure Comments</label>
+                            <div class="input-wrapper">
+                                <textarea></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                Activity Log <span class="toggle-icon">&#9660;</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="form-group-full" style="width: 100%;">
+                    <div class="input-wrapper" style="width: 100%;">
+                        <textarea class="textarea-large" style="width: 100%;">2026-02-06 10:05 AM ET:  COE Team Engaged
+2026-02-06 11:15 AM ET:  Arnold, Stephen assigned to task</textarea>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="footer" style="max-width: 1000px; margin: 0 auto; padding-top: 10px;">
+    <button class="btn-alice" onclick="toggleAlicePopup()">ALICE</button>
+    <button class="btn-message" onclick="toggleChat()">Message</button>
+
+    <div class="dropdown">
+        <button class="btn-engage" onclick="toggleEngageMenu('engageMenuFooter', event)">Engage</button>
+        <div id="engageMenuFooter" class="dropdown-content">
+            <label class="dropdown-item"><input type="checkbox"> Deal Lifecycle Management (DLM)</label>
+            <label class="dropdown-item"><input type="checkbox" onchange="toggleSubMenu(this)"> Deal Assurance: Center of Excellence (COE)</label>
+            <div class="sub-options" style="display: none;">
+                <label class="dropdown-sub-item"><input type="checkbox"> Address Validation</label>
+                <label class="dropdown-sub-item"><input type="checkbox"> New Contract/Amendment (Non RFx)</label>
+                <label class="dropdown-sub-item"><input type="checkbox"> RFx/Proactive Bid</label>
+            </div>
+
+            <label class="dropdown-item"><input type="checkbox"> Deal Assurance: Converged Svc. Support</label>
+            <label class="dropdown-item"><input type="checkbox" onchange="toggleSubMenu(this)"> Deal Assurance: CPE Services</label>
+            <div class="sub-options" style="display: none;">
+                <label class="dropdown-sub-item"><input type="checkbox"> CPE Assessments</label>
+                <label class="dropdown-sub-item"><input type="checkbox"> Address Validation</label>
+                <label class="dropdown-sub-item"><input type="checkbox"> New Contract/Amendment</label>
+                <label class="dropdown-sub-item"><input type="checkbox"> RFx/Proactive Bid</label>
+            </div>
+
+            <label class="dropdown-item"><input type="checkbox"> Deal Assurance: Deal Readiness Assessment (DRA)</label>
+            <label class="dropdown-item"><input type="checkbox"> Deal Assurance: Implementation Assurance (IA)</label>
+            <label class="dropdown-item"><input type="checkbox"> Tech Ops: Global Integrated Architect (GIA)</label>
+            <label class="dropdown-item"><input type="checkbox"> Tech Ops &amp; Architecture: OPD / SDA</label>
+            <label class="dropdown-item"><input type="checkbox"> Tech Ops: Integrated Contract Management (ICM)</label>
+        </div>
+    </div>
+
+    <button class="btn" onclick="openRequestInfoModal()">Request Info</button>
+    <button class="btn">Submit</button>
+    <button class="btn">Save</button>
+</div>
+
+<div id="requestInfoModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>DA-COE Engagement Information Request Form</span>
+            <span class="modal-close" onclick="closeRequestInfoModal()">&#10005;</span>
+        </div>
+        <div class="modal-body">
+            
+            <div class="modal-instructions">
+                To ensure accurate deliverables we will be scheduling a kickoff call based on your availability. Could you please confirm/provide the details below which are mandatory in order to commence the quoting task :
+            </div>
+
+            <div class="collapsible-section">
+                <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                    CUSTOMER INFORMATION
+                    <span class="toggle-icon">&#9660;</span>
+                </button>
+                <div class="collapsible-content">
+                    <div class="form-columns">
+                        <div class="column">
+                            <div class="form-group">
+                                <label>NASP ID</label>
+                                <div class="input-wrapper">
+                                    <input type="text" value="19HNYR">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>SFDC Opportunity ID</label>
+                                <div class="input-wrapper">
+                                    <input type="text" value="O-3928292">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label>Customer Name</label>
+                                <div class="input-wrapper">
+                                    <input type="text" value="SPRINKLE DOODLES">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-container">
+                <button class="tab-button active" onclick="openModalTab(event, 'tab-rfx')">RFx-Proactive Bid</button>
+                <button class="tab-button" onclick="openModalTab(event, 'tab-address')">Address Validation</button>
+                <button class="tab-button" onclick="openModalTab(event, 'tab-amendment')">Amendment</button>
+            </div>
+
+            <div id="tab-rfx" class="tab-content active">
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                        TEAM CONTACT INFORMATION
+                        <span class="toggle-icon">&#9660;</span>
                     </button>
-                    <button class="btn btn-outline">Edit</button>
-                    <button class="btn btn-outline">Export</button>
+                    <div class="collapsible-content">
+                        <div class="form-columns">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>BID Manager</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sales POC</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Smith, John">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Solution Architect (SA)</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Jones, Mary">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>PCM POC</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Zunaid Sheikh">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Deal Strategist</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Miller, Sam">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>COE POC</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                        QUOTE HEADER INFO
+                        <span class="toggle-icon">&#9660;</span>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="form-columns">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Customer Type</label>
+                                    <div class="input-wrapper">
+                                        <select class="required-input" required>
+                                            <option value="Existing" selected>Existing</option>
+                                            <option value="New">New</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contract ID</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="" class="required-input" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>CLE with LE ID</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="" class="required-input" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>VLE</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="" class="required-input" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Currency</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="" class="required-input" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Pricing Plan</label>
+                                    <div class="input-wrapper">
+                                        <select class="required-input" required>
+                                            <option value="" disabled selected>Select an option</option>
+                                            <option value="Transactional">Transactional</option>
+                                            <option value="RTB+Transactional">RTB+Transactional</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contract Term - Quote</label>
+                                    <div class="input-wrapper">
+                                        <select class="required-input" required>
+                                            <option value="" disabled selected>Select months</option>
+                                            <option value="12">12</option>
+                                            <option value="24">24</option>
+                                            <option value="36">36</option>
+                                            <option value="60">60</option>
+                                            <option value="72">72</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contract Term - Access</label>
+                                    <div class="input-wrapper">
+                                        <select class="required-input" required>
+                                            <option value="" disabled selected>Select months</option>
+                                            <option value="12">12</option>
+                                            <option value="24">24</option>
+                                            <option value="36">36</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contract Term - CPE</label>
+                                    <div class="input-wrapper">
+                                        <select class="required-input" required>
+                                            <option value="" disabled selected>Select months</option>
+                                            <option value="12">12</option>
+                                            <option value="24">24</option>
+                                            <option value="36">36</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                        TIMELINE
+                        <span class="toggle-icon">&#9660;</span>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="form-columns">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>RFP Released Date</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-with-icon">
+                                            <input type="text" placeholder="YYYY-MM-DD">
+                                            <button class="icon-btn">&#128197;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>PCM Due date</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-with-icon">
+                                            <input type="text" placeholder="YYYY-MM-DD">
+                                            <button class="icon-btn">&#128197;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>RFP Submission Date</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-with-icon">
+                                            <input type="text" placeholder="YYYY-MM-DD">
+                                            <button class="icon-btn">&#128197;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                        SCOPE OVERVIEW
+                        <span class="toggle-icon">&#9660;</span>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="form-columns">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Address Validation Done</label>
+                                    <div class="input-wrapper multi-field">
+                                        <label style="width: auto; padding: 6px 15px 0 0; text-align: left;">
+                                            <input type="checkbox" id="address_val_checkbox" onchange="toggleAddressAttachment()"> Yes
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="address_attachment_group" style="display: none;">
+                                    <label>Address List Attachment</label>
+                                    <div class="input-wrapper">
+                                        <input type="file" class="required-input" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Site List Attachment</label>
+                                    <div class="input-wrapper">
+                                        <input type="file" class="required-input" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Proposed Solution<br><span style="font-size: 10px; font-weight: normal; color: #777;">(Select One or More Options)</span></label>
+                                    <div class="input-wrapper">
+                                        <select multiple style="height: auto; min-height: 100px;">
+                                            <option value="Network only">Network only</option>
+                                            <option value="Managed">Managed</option>
+                                            <option value="Wave">Wave</option>
+                                            <option value="Eline">Eline</option>
+                                            <option value="CPE Only">CPE Only</option>
+                                            <option value="CPE with Maintenance">CPE with Maintenance</option>
+                                            <option value="VOIP">VOIP</option>
+                                            <option value="IPCC">IPCC</option>
+                                            <option value="Webex">Webex</option>
+                                            <option value="Legacy">Legacy</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Any Alternative Solutions Proposed?</label>
+                                    <div class="input-wrapper">
+                                        <textarea placeholder="If yes, capture the details"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Any Custom Elements or Special Design Requirements?</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Diversity Type</label>
+                                    <div class="input-wrapper">
+                                        <select>
+                                            <option value="None" selected>None</option>
+                                            <option value="Carrier">Carrier</option>
+                                            <option value="L2A">L2A</option>
+                                            <option value="SEGeo">SEGeo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label># Sites</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label># Circuits</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label># Countries</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                        OTHERS
+                        <span class="toggle-icon">&#9660;</span>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="form-columns">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>G-Drive Links (if any)</label>
+                                    <div class="input-wrapper">
+                                        <textarea class="textarea-large"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>RFP Round</label>
+                                    <div class="input-wrapper">
+                                        <select>
+                                            <option value="" disabled selected>Select Round</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="BAFO">BAFO</option>
+                                            <option value="LAFO">LAFO</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                        CPE Configuration
+                        <span class="toggle-icon">&#9660;</span>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="form-columns">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Site Address (Location where CPE needs to be configured)</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Billing Method<br><span style="font-size: 10px; font-weight: normal; color: #777;">(Select One or More Options)</span></label>
+                                    <div class="input-wrapper">
+                                        <select multiple style="height: auto; min-height: 80px;">
+                                            <option value="MRP">MRP</option>
+                                            <option value="Purchase">Purchase</option>
+                                            <option value="Customer Provided">Customer Provided</option>
+                                            <option value="Direct Lease">Direct Lease</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Preferred Contracting Method</label>
+                                    <div class="input-wrapper">
+                                        <select>
+                                            <option value="" disabled selected>Select Contracting Method</option>
+                                            <option value="Local">Local</option>
+                                            <option value="Central">Central</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Maintenance</label>
+                                    <div class="input-wrapper multi-field">
+                                        <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="cpe_maint" value="Yes"> Yes</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Installation</label>
+                                    <div class="input-wrapper multi-field">
+                                        <label style="width: auto; padding: 6px 15px 0 0; text-align: left;"><input type="checkbox" name="cpe_inst" value="Yes"> Yes</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 40px;"><input type="checkbox"></th>
-                        <th>SFDC Opp ID #</th>
-                        <th>Number <span class="sort-icon">▲</span></th>
-                        <th>Customer Name</th>
-                        <th>State</th>
-                        <th>Assigned To <span class="sort-icon">⚲</span></th>
-                        <th>Request Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3628472</a></td>
-                        <td>Case # 0020499</td>
-                        <td>Acme Corp</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>Address Validation</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3621934</a></td>
-                        <td>Case # 0020500</td>
-                        <td>Globex Corporation</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>RFx/Proactive Bid</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3625512</a></td>
-                        <td>Case # 0020501</td>
-                        <td>Soylent Corp</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>New Contract Amendment</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3459021</a></td>
-                        <td>Case # 0020502</td>
-                        <td>Initech</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>Address Validation</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3451123</a></td>
-                        <td>Case # 0020505</td>
-                        <td>Umbrella Corporation</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>RFx/Proactive Bid</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3456789</a></td>
-                        <td>Case # 0020506</td>
-                        <td>Massive Dynamic</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>New Contract Amendment</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3623344</a></td>
-                        <td>Case # 0020509</td>
-                        <td>Stark Industries</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>New Contract Amendment</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3629812</a></td>
-                        <td>Case # 0020510</td>
-                        <td>Wayne Enterprises</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>Address Validation</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-1114567</a></td>
-                        <td>Case # 0020511</td>
-                        <td>Cyberdyne Systems</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>RFx/Proactive Bid</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3627465</a></td>
-                        <td>Case # 0020512</td>
-                        <td>Virtucon</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>Address Validation</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3622091</a></td>
-                        <td>Case # 0020513</td>
-                        <td>Omni Consumer Products</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>New Contract Amendment</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3624837</a></td>
-                        <td>Case # 0020514</td>
-                        <td>Buy n Large</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>RFx/Proactive Bid</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3626102</a></td>
-                        <td>Case # 0020515</td>
-                        <td>Hooli</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>RFx/Proactive Bid</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3458829</a></td>
-                        <td>Case # 0020516</td>
-                        <td>Vehement Capital Partners</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>Address Validation</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3453045</a></td>
-                        <td>Case # 0020517</td>
-                        <td>Pied Piper</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>New Contract Amendment</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><a href="#" class="link-red">O-3857182</a></td>
-                        <td>Case # 0020520</td>
-                        <td>Dunder Mifflin</td>
-                        <td>Open</td>
-                        <td>(empty)</td>
-                        <td>Address Validation</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="pagination">
-                <div>Showing 101-120 of 121</div>
-                <div class="page-controls">
-                    <span class="page-number">|&lt;</span>
-                    <span class="page-number">&lt;</span>
-                    <span class="page-number">1</span>
-                    <span class="page-number">2</span>
-                    <span class="page-number">3</span>
-                    <span class="page-number">4</span>
-                    <span class="page-number">5</span>
-                    <span class="page-number active">6</span>
-                    <span class="page-number">7</span>
-                    <span class="page-number">&gt;</span>
-                    <span class="page-number">&gt;|</span>
+            <div id="tab-address" class="tab-content">
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="toggleSection(this)">
+                        TEAM CONTACT INFORMATION
+                        <span class="toggle-icon">&#9660;</span>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="form-columns">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>BID Manager</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sales POC</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Smith, John">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Solution Architect (SA)</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Jones, Mary">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>PCM POC</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Zunaid Sheikh">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label>Deal Strategist</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="Miller, Sam">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>COE POC</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Legal POC</label>
+                                    <div class="input-wrapper multi-field" style="width: 65%;">
+                                        <div class="input-with-icon" style="flex-grow: 1;">
+                                            <input type="text" value="">
+                                            <button class="icon-btn">&#128269;</button> 
+                                        </div>
+                                        <label style="width: auto; padding: 0; text-align: left;"><input type="checkbox"> Notify</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <span style="color: #c00; font-weight: bold;">20 ▼</span> rows per page
-                </div>
-            </div>
-        </main>
-    </div>
 
-</body>
-</html>
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-header" onclick="
